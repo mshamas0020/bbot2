@@ -1,11 +1,4 @@
-external/
-
-resources/
-
-.vs/
-
-x64/
-
-**.vcxproj**
-
+vs
+.vs
 **.sln
+**.vcxproj
