@@ -1,0 +1,11 @@
+external/
+
+resources/
+
+.vs/
+
+x64/
+
+**.vcxproj**
+
+**.sln
