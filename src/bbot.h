@@ -52,7 +52,7 @@ class Bbot {
 	//// SCORING PARAMETERS ////
 
 	int EVAL_WIN = 1000000; // win
-	int EVAL_DRAW = -9999; // draw
+	int EVAL_DRAW = -1; // draw
 
 	static const int NUM_TILE_GROUPS = 4;
 	int TILE_GROUP_SCORE[NUM_TILE_GROUPS] = { 500, 1000, 4000, 5000 }; // score for tile groups, defined below
@@ -71,6 +71,8 @@ class Bbot {
 	// a narrow window is initially faster, but more likely to fail, requiring a re-search
 
 	//// MEMORY ////
+
+	const int TT_ALLOC = S_TT_ALLOC;
 
 	// size of FILO array of moves to play within search
 	// entries are quickly rewritten and stay low, only reach higher indices at higher depths

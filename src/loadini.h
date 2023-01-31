@@ -22,41 +22,59 @@ void loadINI() {
 
 	if (e != SI_OK) throw Exception("Could not load " + INI_FILE);
 
-	// USER INTERFACE
+	// GAME
 
 	// user-controlled side(s)
-	string s = string(ini.GetValue("USER_INTERFACE", "white-is"));
-	CP1 = s == "computer";
+	string s = string(ini.GetValue("GAME", "white-is"));
+	S_CP1 = s == "computer";
 
-	s = string(ini.GetValue("USER_INTERFACE", "black-is"));
-	CP2 = s == "computer";
+	s = string(ini.GetValue("GAME", "black-is"));
+	S_CP2 = s == "computer";
 
 	// perspective
-	s = string(ini.GetValue("USER_INTERFACE", "perspective"));
+	s = string(ini.GetValue("GAME", "perspective"));
 
-	PERSPECTIVE = AUTO;
-	if (s == "white") PERSPECTIVE = FIXED_WHITE;
-	if (s == "black") PERSPECTIVE = FIXED_BLACK;
+	S_PERSPECTIVE = AUTO;
+	if (s == "white") S_PERSPECTIVE = FIXED_WHITE;
+	if (s == "black") S_PERSPECTIVE = FIXED_BLACK;
 
 
 	// COMPUTER-PLAYER
 
 	// time limit
 	s = string(ini.GetValue("COMPUTER_PLAYER", "time-limit"));
-	TIME_LIMIT = std::stoi(s);
+	S_TIME_LIMIT = std::stoi(s);
 
 	// depth limit
 	s = string(ini.GetValue("COMPUTER_PLAYER", "depth-limit"));
-	DEPTH_LIMIT = std::stoi(s);
+	S_DEPTH_LIMIT = std::stoi(s);
 
 	// transposition table allocation
 	s = string(ini.GetValue("COMPUTER_PLAYER", "transposition-table-allocation"));
-	TT_ALLOC = std::stoi(s);
+	S_TT_ALLOC = std::stoi(s);
 
 	// round to nearest 2^n
 	u_long n = 1;
-	while (n < TT_ALLOC) n <<= 1;
-	TT_ALLOC = n;
+	while (n < S_TT_ALLOC) n <<= 1;
+	S_TT_ALLOC = n;
+
+
+	// LAYOUT
+
+	s = string(ini.GetValue("LAYOUT", "screen-width"));
+	S_SCREEN_WIDTH = std::stoi(s);
+
+	s = string(ini.GetValue("LAYOUT", "screen-height"));
+	S_SCREEN_HEIGHT = std::stoi(s);
+
+	s = string(ini.GetValue("LAYOUT", "min-game-size"));
+	S_MIN_GAME_SIZE = std::stoi(s);
+
+	s = string(ini.GetValue("LAYOUT", "info-box-height"));
+	S_INFO_BOX_HEIGHT = std::stoi(s);
+
+	s = string(ini.GetValue("LAYOUT", "margin"));
+	S_MARGIN = std::stoi(s);
 }
 
 } // end namespace Bbot2

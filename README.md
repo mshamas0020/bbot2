@@ -1,13 +1,13 @@
-================
+----------------
 Bbot2 v1.0
-================
+----------------
 
 See SETTINGS.ini for options.
-================
+----------------
 
 Barca is a chess variant board game created by Andrew Caldwell. The rules are included
 below.
-	*
+
 	BARCA – The Watering Hole Game
 	For 2 players. Ages 8 to adult.
 
@@ -49,9 +49,9 @@ below.
 	removed.
  
 	Have Fun!
-	*
-See http://playbarca.com/?page_id=40
-================
+	
+http://playbarca.com/?page_id=40
+----------------
 
 Bbot2 was designed as a chess variant engine to play the game as optimally as
 possible. Many traditional chess programming techniques were borrowed, with exact

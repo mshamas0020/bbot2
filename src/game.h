@@ -38,8 +38,8 @@ public:
 
 	//// COMPUTER SETTINGS ////
 
-	int searchMaxTime; // milliseconds
-	int searchMaxDepth; // capped by MAX_LINE_LEN
+	int searchMaxTime = S_TIME_LIMIT; // milliseconds
+	int searchMaxDepth = S_DEPTH_LIMIT; // capped by MAX_LINE_LEN
 
 	// overrided by SETTINGS.ini
 

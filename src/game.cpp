@@ -8,14 +8,7 @@ namespace Bbot2 {
 
 // constructor
 Game::Game(Board* board_)
-	: board(board_) {
-	if (TIME_LIMIT)
-		searchMaxTime = TIME_LIMIT;
-
-	if (DEPTH_LIMIT)
-		searchMaxDepth = DEPTH_LIMIT;
-
-};
+	: board(board_) {};
 
 ////
 

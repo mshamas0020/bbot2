@@ -15,28 +15,36 @@ namespace Bbot2 {
 //// CONFIG SETTINGS ////
 
 // log
-const bool LOG = true; // print basic info
-const bool LOG_VERBOSE = true; // print more info
-const bool DEBUG = true; // when throwing an exception, print information that may be helpful
+const bool LOG = false; // print basic info
+const bool LOG_VERBOSE = false; // print more info
+const bool DEBUG = false; // when throwing an exception, print information that may be helpful
 
 
 //// FROM SETTINGS.ini ////
 
-inline bool CP1; // if true, white is played by computer
-inline bool CP2; // if true, black is played by computer
+inline bool S_CP1; // if true, white is played by computer
+inline bool S_CP2; // if true, black is played by computer
 
 // perspective - which side is at the bottom of the game screen
 // when auto, perspective follows user-controlled side(s)
 enum Perspective: int { FIXED_WHITE, FIXED_BLACK, AUTO };
-inline Perspective PERSPECTIVE;
+inline Perspective S_PERSPECTIVE;
 
 // size of hash table. primarily used as a transposition table, but also contains game history 
 // larger values give better performance at a higher memory demand
 // must be form 2^n for hashing purposes
-inline unsigned long TT_ALLOC;
+inline unsigned long S_TT_ALLOC;
 
-inline int TIME_LIMIT; // sets Game.searchMaxTime
-inline int DEPTH_LIMIT; // sets Game.searchMaxDepth
+inline int S_TIME_LIMIT; // sets Game.searchMaxTime
+inline int S_DEPTH_LIMIT; // sets Game.searchMaxDepth
+
+inline int S_SCREEN_WIDTH; // sets GUI.screenWidth
+inline int S_SCREEN_HEIGHT; // sets GUI.screenHeight
+
+inline int S_MIN_GAME_SIZE; // sets GUI.MIN_GAME_SIZE
+inline int S_INFO_BOX_HEIGHT; // sets GUI.INFO_BOX_HEIGHT
+inline int S_MARGIN; // sets GUI.MARGIN
+//
 
 
 ////

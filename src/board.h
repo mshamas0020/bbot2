@@ -88,6 +88,8 @@ public:
 	bboard occupancyBySide[NUM_SIDES]; // occupancy of white [0] and black [1]
 
 private:
+	const int TT_ALLOC = S_TT_ALLOC;
+
 	bboard threatMaps[NUM_HERDS]; // union of adjacent squares for each herd
 
 public:

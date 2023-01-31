@@ -18,13 +18,17 @@ namespace Bbot2 {
 class GUI {
 
 	//// INITIAL SCREEN WIDTH/HEIGHT ////
-	int SCREEN_WIDTH = 800; 
-	int SCREEN_HEIGHT = 1050;
+	int screenWidth = S_SCREEN_WIDTH; 
+	int screenHeight = S_SCREEN_HEIGHT;
 
-	//// LAYOUT CONSTANTS ////
-	const int MARGIN = 50;
-	const int MIN_GAME_SIZE = 400;
-	const int INFO_BOX_HEIGHT = 200;
+	//// LAYOUT ////
+	const int MIN_GAME_SIZE = S_MIN_GAME_SIZE;
+	const int INFO_BOX_HEIGHT = S_INFO_BOX_HEIGHT;
+	const int MARGIN = S_MARGIN;
+
+	const Perspective PERSPECTIVE = S_PERSPECTIVE;
+
+	// overrided by SETTINGS.ini
 
 	//// COLOURS ////
 	SDL_Color COLOUR_BG =			{ 0x20, 0x20, 0x20, 0xFF }; // background

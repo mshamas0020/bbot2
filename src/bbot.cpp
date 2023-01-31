@@ -709,7 +709,7 @@ int Bbot::search_alphabeta(int depth, int alpha, int beta, Line* line) {
 
 	// check draw by repetition
 	if (gh_match())
-		return EVAL_DRAW;
+		return rootDist % 2 ? -EVAL_DRAW : EVAL_DRAW;
 
 	// check tt
 	// if value is returned, use instead of current search

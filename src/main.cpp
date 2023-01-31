@@ -37,13 +37,13 @@ void play() {
 	// add computers
 	Bbot comp[NUM_SIDES] = { Bbot(&game), Bbot(&game) };
 
-	if (CP1) {
+	if (S_CP1) {
 		comp[WHITE].init();
 		game.add_player(&comp[WHITE], WHITE);
 		__LOG_VERBOSE("CP1 initialized");
 	}
 
-	if (CP2) {
+	if (S_CP2) {
 		comp[BLACK].init();
 		game.add_player(&comp[BLACK], BLACK);
 		__LOG_VERBOSE("CP2 initialized");
@@ -74,12 +74,12 @@ void play() {
 
 
 	// computers
-	if (CP1) {
+	if (S_CP1) {
 		comp[WHITE].close();
 		__LOG_VERBOSE("CP1 closed");
 	}
 
-	if (CP2) {
+	if (S_CP2) {
 		comp[BLACK].close();
 		__LOG_VERBOSE("CP2 closed");
 	}

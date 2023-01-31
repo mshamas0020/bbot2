@@ -26,7 +26,7 @@ void GUI::init() {
 	// initialize SDL
 	init_SDL();
 
-	window_resized(SCREEN_WIDTH, SCREEN_HEIGHT); // sets layout values
+	window_resized(screenWidth, screenHeight); // sets layout values
 
 	// load textures, fonts, cursors
 	load_resources();
@@ -127,7 +127,7 @@ void GUI::init_SDL() {
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
 	// create window
-	window = SDL_CreateWindow("BBOT 2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+	window = SDL_CreateWindow("BBOT 2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
 	// set renderer
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_TARGETTEXTURE);
@@ -366,17 +366,17 @@ void GUI::on_key_down_event(SDL_Keycode keycode) {
 // updates layout values
 void GUI::window_resized(int width, int height) {
 	// update screen width/height
-	SCREEN_WIDTH = width;
-	SCREEN_HEIGHT = height;
+	screenWidth = width;
+	screenHeight = height;
 
 	// if screen is too short, don't show info box
-	showInfo = MARGIN + MIN_GAME_SIZE + MARGIN + INFO_BOX_HEIGHT + MARGIN <= SCREEN_HEIGHT;
+	showInfo = MARGIN + MIN_GAME_SIZE + MARGIN + INFO_BOX_HEIGHT + MARGIN <= screenHeight;
 
 	// game size, with or without info box
 	if (showInfo) {
-		GAME_WIDTH = std::min(SCREEN_WIDTH, SCREEN_HEIGHT - INFO_BOX_HEIGHT) - 2 * MARGIN;
+		GAME_WIDTH = std::min(screenWidth, screenHeight - INFO_BOX_HEIGHT) - 2 * MARGIN;
 	} else {
-		GAME_WIDTH = std::min(SCREEN_WIDTH, SCREEN_HEIGHT) - 2 * MARGIN;
+		GAME_WIDTH = std::min(screenWidth, screenHeight) - 2 * MARGIN;
 	}
 
 	// game width/height can't go below minimum
@@ -384,7 +384,7 @@ void GUI::window_resized(int width, int height) {
 	GAME_HEIGHT = GAME_WIDTH;
 
 	// game x/y
-	GAME_X = std::max(SCREEN_WIDTH / 2 - GAME_WIDTH / 2, MARGIN);
+	GAME_X = std::max(screenWidth / 2 - GAME_WIDTH / 2, MARGIN);
 	GAME_Y = MARGIN;
 
 	// square width/height
@@ -675,7 +675,7 @@ void GUI::draw_info() {
 	for (int i = 0; i < infoText.size(); i ++) {
 		infoText[i].x = MARGIN;
 		infoText[i].y = y;
-		infoText[i].set_width(SCREEN_WIDTH - MARGIN * 2);
+		infoText[i].set_width(screenWidth - MARGIN * 2);
 		infoText[i].draw();
 		y += infoText[i].textHeight + FONT_SIZE / 2;
 	}
