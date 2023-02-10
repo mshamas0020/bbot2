@@ -75,6 +75,9 @@ void loadINI() {
 
 	s = string(ini.GetValue("LAYOUT", "margin"));
 	S_MARGIN = std::stoi(s);
+
+	s = string(ini.GetValue("LAYOUT", "font-size"));
+	S_FONT_SIZE = std::stoi(s);
 }
 
 } // end namespace Bbot2

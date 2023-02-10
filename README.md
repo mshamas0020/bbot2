@@ -1,56 +1,56 @@
 ----------------
-Bbot2 v1.0
+Bbot2 v0.1
 ----------------
 
 See SETTINGS.ini for options.
 ----------------
 
-Barca is a chess variant board game created by Andrew Caldwell. The rules are included
-below.
+Barca is a chess variant board game created by Andrew Caldwell. An adapted version of
+the rules are included below.
 
 	BARCA – The Watering Hole Game
 	For 2 players. Ages 8 to adult.
 
 	OBJECT OF THE GAME
-	Get any 3 of your animals on the watering holes at the same time.
+	Get any 3 of your pieces on the watering holes at the same time.
  
 	SET UP
-	Set the game board between both players. Place the elephants in the center of
-	each player’s back row. Place the mice in front of the elephants. And place the
-	lions to the sides of the mice.
+	Set the game board between both players. Place the queens in the center of
+	each player’s back row. Place the rooks in front of the queens. And place the
+	bishops to the sides of the rooks.
+	(NOTE: The original board game uses mice, lions, and elephants. In this program,
+	the pieces and terminology have been replaced by their chess equivalents.)
  
 	RULES OF PLAY
-	The winner of Rock Paper Scissors (Roshambo) starts the game. Players take
-	turns moving one of their animals.
-	(NOTE: This program has white start.)
+	White has the first move.
+	(NOTE: The original board game has players decide first move with Rock Paper
+	Scissors.)
 
-	Mice move horizontally or vertically. Lions only move diagonally. Elephants
-	move horizontally, vertically or diagonally. Animals can move any number of
-	vacant squares in a single direction. Animals cannot jump over other animals.
+	Rooks move horizontally or vertically. Bishops only move diagonally. Queens
+	move horizontally, vertically or diagonally. Pieces can move any number of
+	vacant squares in a single direction. Pieces cannot jump over other pieces.
 
-	A players’ animals can be adjacent to each other. However, for opposing sides,
-	mice fear lions. Lions fear elephants. And elephants fear mice.
+	A players’ pieces can be adjacent to each other. However, for opposing sides,
+	rooks fear bishops. Bishops fear queens. And queens fear rooks.
 
-	An animal cannot be moved next to the animal it fears, except for trapped
-	animals.
+	A piece cannot be moved next to a piece it fears, except for trapped
+	pieces.
 
-	An animal is scared when it is next to the animal it fears.
+	A piece is scared when it is next to a piece it fears.
 
-	A scared animal must escape to a safe location before other animals can be
+	A scared piece must escape to a safe location before other pieces can be
 	moved. When many are scared, choose one to move.
 
-	A scared animal with no escape is trapped and may optionally move to another
+	A scared piece with no escape is trapped and may optionally move to another
 	scared position.
 
 	Watering holes are near the center of the game board. The player who has
-	animals on 3 watering holes at the same time wins!
+	pieces on 3 watering holes at the same time wins!
 
-	A player can still win if animals are scared or trapped. Animals are never
+	A player can still win if pieces are scared or trapped. Pieces are never
 	removed.
- 
-	Have Fun!
 	
-http://playbarca.com/?page_id=40
+Original rules: http://playbarca.com/?page_id=40
 ----------------
 
 Bbot2 was designed as a chess variant engine to play the game as optimally as
@@ -59,14 +59,12 @@ implementations changed to fit the variant rule-set. The search currently uses a
 negamax alphabeta tree with a PV-estimated aspiration window and transposition
 tables.
 
-Credit to the creators of chessprogramming.org and Bruce Moreland for the exhaustive
+Credit to the creators of chessprogramming.org and Bruce Moreland for the generous
 amount of educational material on the topic.
 Third-party software includes SDL2 and SimpleINI, contained in /external.
 
-This program contains a GUI and can be run portably with only bbot2.exe, SETTINGS.ini,
+This program contains a GUI and can be run portably with only bbot2.exe, SETTINGS.ini, .dlls
 and resources/.
 x64 architecture is required.
 
 Please email matt(@)shamas(.)ca with any questions or bugs.
-
--- Matt

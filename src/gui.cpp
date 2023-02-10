@@ -38,7 +38,7 @@ void GUI::init() {
 	std::copy(board->pointerBoard, &board->pointerBoard[NUM_SQUARES], displayBoard);
 
 	// display move index
-	moveIndex = 0;
+	posIndex = 0;
 
 	// initial board orientation
 	flipBoard = PERSPECTIVE == FIXED_BLACK;
@@ -54,7 +54,7 @@ void GUI::open_game(Game* game_) {
 	std::copy(board->pointerBoard, &board->pointerBoard[NUM_SQUARES], displayBoard);
 
 	// display move index
-	moveIndex = 0;
+	posIndex = 0;
 }
 
 ////
@@ -351,11 +351,11 @@ void GUI::on_mouse_up_event() {
 void GUI::on_key_down_event(SDL_Keycode keycode) {
 	switch (keycode) {
 		case SDLK_LEFT:
-			set_move_index(std::max(moveIndex - 1, 0));
+			to_pos(std::max(posIndex - 1, 0));
 			break;
 
 		case SDLK_RIGHT:
-			set_move_index(std::min(moveIndex + 1, game->playedLine.length));
+			to_pos(std::min(posIndex + 1, game->playedLine.length));
 			break;
 	}
 }
@@ -408,41 +408,46 @@ void GUI::quit_event() {
 
 // call after game->play_move()
 void GUI::on_move_played() {
+	if (!game->movePlayed)
+		return;
 
 	// clear grabbed/selected
 	grabbed = nullptr;
 	selected = nullptr;
 
 	// update display board
-	set_move_index(game->playedLine.length);
+	to_pos(game->playedLine.length);
 
 	// flip board if needed
 	if (PERSPECTIVE == AUTO && game->user_to_play())
 		flipBoard = board->sideToMove;
+
+	game->movePlayed = false;
 }
 
 // set played line index, determining what position of the game to show
-void GUI::set_move_index(int i) {
+void GUI::to_pos(int i) {
 
+	// traverse through played line until arrived at current position
 	Move m;
-	while (moveIndex < i) {
-		m = game->playedLine.get_move(moveIndex);
+	while (posIndex < i) {
+		m = game->playedLine.get_move(posIndex);
 		displayBoard[m.get_to()] = displayBoard[m.get_from()];
 		displayBoard[m.get_from()] = nullptr;
-		moveIndex ++;
+		posIndex ++;
 	}
 
-	while (moveIndex > i) {
-		m = game->playedLine.get_move(moveIndex - 1);
+	while (posIndex > i) {
+		m = game->playedLine.get_move(posIndex - 1);
 		displayBoard[m.get_from()] = displayBoard[m.get_to()];
 		displayBoard[m.get_to()] = nullptr;
-		moveIndex --;
+		posIndex --;
 	}
 }
 
 // if the board being displayed is current
 bool GUI::is_display_current() {
-	return moveIndex == game->playedLine.length;
+	return posIndex == game->playedLine.length;
 }
 
 ////
@@ -537,8 +542,8 @@ void GUI::draw_squares() {
 		return;
 
 	// highlight last move
-	if (moveIndex > 0) {
-		Move move = game->playedLine.get_move(moveIndex - 1);
+	if (posIndex > 0) {
+		Move move = game->playedLine.get_move(posIndex - 1);
 
 		SDL_SetRenderDrawColor(renderer, COLOUR_LAST_MOVE.r, COLOUR_LAST_MOVE.g, COLOUR_LAST_MOVE.b, COLOUR_LAST_MOVE.a);
 
@@ -737,7 +742,7 @@ GUI::Text::Text(string text_, int x_, int y_, int width_, int align_, SDL_Color 
 
 	// set values
 	textWidth = 0;
-	textHeight = GUI::FONT_SIZE;
+	textHeight = graphics->FONT_SIZE;
 	
 	// render
 	render();

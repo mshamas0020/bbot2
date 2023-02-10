@@ -91,5 +91,4 @@ private:
 	void __DEBUG(bool condition, std::string message);
 };
 
-
 } // end namespace Bbot2

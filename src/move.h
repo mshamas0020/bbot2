@@ -36,4 +36,3 @@ public:
 };
 
 } // end namespace Bbot2
-

@@ -65,7 +65,7 @@ class GUI {
 
 	//// FONT ////
 	const std::string FONT_FILE = "consola.ttf";
-	static const int FONT_SIZE = 16;
+	int FONT_SIZE = S_FONT_SIZE;
 
 	////
 
@@ -109,7 +109,7 @@ class GUI {
 	std::vector<Piece*>* pieces; // from board - consecutive piece array
 
 	Piece* displayBoard[NUM_SQUARES]; // pointerBoard for display
-	int moveIndex = 0; // index of game->playedLine to use for display, allows viewing past positions
+	int posIndex = 0; // index of game->playedLine to use for display, allows viewing past positions
 
 	bool flipBoard = false; // false - white's view, true - black's view
 
@@ -148,7 +148,7 @@ private:
 	void quit_event();
 
 	void on_move_played();
-	void set_move_index(int index);
+	void to_pos(int index);
 	bool is_display_current();
 
 	void init_text();

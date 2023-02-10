@@ -44,6 +44,8 @@ inline int S_SCREEN_HEIGHT; // sets GUI.screenHeight
 inline int S_MIN_GAME_SIZE; // sets GUI.MIN_GAME_SIZE
 inline int S_INFO_BOX_HEIGHT; // sets GUI.INFO_BOX_HEIGHT
 inline int S_MARGIN; // sets GUI.MARGIN
+
+inline int S_FONT_SIZE; // sets GUI.FONT_SIZE
 //
 
 

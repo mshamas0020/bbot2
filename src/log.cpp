@@ -43,6 +43,4 @@ void Exception::print() {
 	__PRINT(format("ERROR: {}\n{}({}:{}) in {}\n", message, location.file_name(), location.line(), location.column(), location.function_name()));
 }
 
-
-
 } // end namespace Bbot2

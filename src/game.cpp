@@ -19,6 +19,7 @@ void Game::init() {
 	playedLine.movesVector.clear();
 	playedLine.length = 0;
 	history = nullptr;
+	movePlayed = false;
 
 	add_history();
 }
@@ -44,9 +45,6 @@ void Game::add_player(Bbot* comp, Side side) {
 // main update
 void Game::update() {
 
-	// update values
-	movePlayed = false;
-
 	if (game_over() || user_to_play())
 		return;
 
@@ -55,10 +53,8 @@ void Game::update() {
 	comp->search(searchMaxTime, searchMaxDepth);
 
 	// play move is search has exited
-	if (!comp->search_ongoing()) {
+	if (!comp->search_ongoing())
 		play_move(comp->suggested_move());
-		movePlayed = true;
-	}
 
 	// update search values
 	// to be read by GUI
@@ -73,6 +69,8 @@ void Game::update() {
 
 // play move on board, then update players
 void Game::play_move(Move move) {
+
+	movePlayed = false;
 
 	// get piece
 	Piece* p = board->pointerBoard[move.get_from()];
@@ -119,6 +117,8 @@ void Game::play_move(Move move) {
 		for (Side side : SIDES)
 			for (Piece* p : board->pieces[side])
 				p->moveBoard.reset();
+
+	movePlayed = true;
 }
 
 // if no assigned computer this turn, assume user is playing
