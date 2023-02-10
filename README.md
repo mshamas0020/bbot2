@@ -61,10 +61,10 @@ tables.
 
 Credit to the creators of chessprogramming.org and Bruce Moreland for the generous
 amount of educational material on the topic.
-Third-party software includes SDL2 and SimpleINI, contained in /external.
+Third-party software includes SDL2 and SimpleINI, found in /external.
 
 This program contains a GUI and can run portably with only bbot2.exe, SETTINGS.ini, .dlls,
 and resources/.
-Windows x64 is required.
+All binaries are for Windows x64.
 
 Please email matt(@)shamas(.)ca with any questions or bugs.
