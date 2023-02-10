@@ -63,8 +63,8 @@ Credit to the creators of chessprogramming.org and Bruce Moreland for the genero
 amount of educational material on the topic.
 Third-party software includes SDL2 and SimpleINI, contained in /external.
 
-This program contains a GUI and can be run portably with only bbot2.exe, SETTINGS.ini, .dlls,
+This program contains a GUI and can run portably with only bbot2.exe, SETTINGS.ini, .dlls,
 and resources/.
-x64 architecture is required.
+Windows x64 is required.
 
 Please email matt(@)shamas(.)ca with any questions or bugs.
