@@ -7,8 +7,10 @@
 #include <iostream>
 #include <vector>
 #include <string>
+#include <algorithm>
 #include <format>
 #include <bitset>
+#include "../external/SimpleIni/SimpleIni.h"
 
 namespace Bbot2 {
 
@@ -17,42 +19,23 @@ namespace Bbot2 {
 // log
 const bool LOG = false; // print basic info
 const bool LOG_VERBOSE = false; // print more info
-const bool DEBUG = false; // when throwing an exception, print information that may be helpful
+const bool DEBUG = true; // when throwing an exception, print information that may be helpful
 
+// .ini
+inline std::string INI_FILE = "SETTINGS.ini";
 
-//// FROM SETTINGS.ini ////
+////
 
-inline bool S_CP1; // if true, white is played by computer
-inline bool S_CP2; // if true, black is played by computer
-
-// perspective - which side is at the bottom of the game screen
-// when auto, perspective follows user-controlled side(s)
-enum Perspective: int { FIXED_WHITE, FIXED_BLACK, AUTO };
-inline Perspective S_PERSPECTIVE;
+// simpleINI instance shared by most files
+inline CSimpleIniA ini;
 
 // size of hash table. primarily used as a transposition table, but also contains game history 
 // larger values give better performance at a higher memory demand
 // must be form 2^n for hashing purposes
-inline unsigned long S_TT_ALLOC;
-
-inline int S_TIME_LIMIT; // sets Game.searchMaxTime
-inline int S_DEPTH_LIMIT; // sets Game.searchMaxDepth
-
-inline int S_SCREEN_WIDTH; // sets GUI.screenWidth
-inline int S_SCREEN_HEIGHT; // sets GUI.screenHeight
-
-inline int S_MIN_GAME_SIZE; // sets GUI.MIN_GAME_SIZE
-inline int S_INFO_BOX_HEIGHT; // sets GUI.INFO_BOX_HEIGHT
-inline int S_MARGIN; // sets GUI.MARGIN
-
-inline int S_FONT_SIZE; // sets GUI.FONT_SIZE
-//
-
+// shared by Bbot (for TT) and Board (for Zobrist keys). important that this is kept global
+inline unsigned long TT_ALLOC;
 
 ////
-
-// if a position occurs x times, the game ends in a draw
-const int REPETITIONS_TO_DRAW = 3;
 
 
 //// DO NOT EDIT ////

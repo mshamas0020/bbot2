@@ -6,9 +6,12 @@
 // there is collision resolution exclusively for a game history linked list within the TT to detect draws
 // many chess programming techniques are adapted to fit to the alternate rule-set and 10x10 board
 
+// a score of +1.0 is equivalent to a 1 watering hole advantage to white
+// a negative score is an opposite advantage to black
+
 // TODO:
-// Automated parameter tuning
 // Multi-threading (Lazy SMP)
+// Automated parameter tuning
 // Opening book
 
 #pragma once
@@ -71,8 +74,6 @@ class Bbot {
 	// a narrow window is initially faster, but more likely to fail, requiring a re-search
 
 	//// MEMORY ////
-
-	const int TT_ALLOC = S_TT_ALLOC;
 
 	// size of FILO array of moves to play within search
 	// entries are quickly rewritten and stay low, only reach higher indices at higher depths
@@ -221,8 +222,8 @@ public:
 	Bbot(Game* game_);
 
 	void init();
-	void close_game();
-	void open_game(Game* game_);
+	void attach_game(Game* game_);
+	void release_game();
 
 	bool search(int maxTime, int maxDepth);
 	void search_abort();
@@ -234,8 +235,10 @@ public:
 	bool search_ongoing();
 	int search_depth();
 	double search_duration();
+	int search_speed();
 	Move suggested_move();
 
+	void soft_close();
 	void close();
 
 private:

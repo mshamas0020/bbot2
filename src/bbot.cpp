@@ -22,10 +22,10 @@ Bbot::Bbot(Game* game_)
 
 ////
 
-// initialize board if needed, then generate other values, set up first key/hash
+// init
 void Bbot::init() {
-	if (!board->initialized)
-		board->init();
+	if (!game->initialized)
+		game->init();
 
 	// allocate TT
 	transpositionTable = new TT[TT_ALLOC];
@@ -39,13 +39,8 @@ void Bbot::init() {
 	initialized = true;
 }
 
-// if board is to be closed and Bbot will persist, call this before board->close()
-void Bbot::close_game() {
-	gh_clear_played();
-}
-
-// reset when passed a new board
-void Bbot::open_game(Game* game_) {
+// attach new game and reset what is necessary
+void Bbot::attach_game(Game* game_) {
 	game = game_;
 	board = game->board;
 	pieces = board->pieces;
@@ -55,6 +50,11 @@ void Bbot::open_game(Game* game_) {
 	eval = 0;
 
 	gh_store();
+}
+
+// if game is to be closed and Bbot will persist, call this before game->close()
+void Bbot::release_game() {
+	gh_clear_played();
 }
 
 ////
@@ -85,7 +85,7 @@ bool Bbot::search(int maxTime, int maxDepth) {
 	}
 
 	// check for search exit
-	if (search_exit(searchDepth >= std::min(maxDepth, MAX_LINE_LEN), "MAX DEPTH REACHED"))
+	if (search_exit(searchDepth >= (std::min)(maxDepth, MAX_LINE_LEN), "MAX DEPTH REACHED"))
 		return false;
 
 	if (search_exit(is_mate_eval(eval), "FORCED WIN/LOSS FOUND"))
@@ -173,6 +173,15 @@ double Bbot::search_duration() {
 	return searchDuration;
 }
 
+// get nodes/sec
+int Bbot::search_speed() {
+	if (searchDuration > 0) {
+		return (int) ((double) nodesVisited / search_clock() * CLOCKS_PER_SEC);
+	} else {
+		return 0;
+	}
+}
+
 // get move suggested by engine
 // only call after successful search
 Move Bbot::suggested_move() {
@@ -181,14 +190,19 @@ Move Bbot::suggested_move() {
 
 ////
 
+// close without de-allocating transposition table
+void Bbot::soft_close() {
+	// clear remaining game history
+	gh_clear_played();
+}
+
 // close
 // clear game history and de-allocate transposition table
 void Bbot::close() {
 	if (!initialized)
 		return;
 
-	// clear remaining game history
-	gh_clear_played();
+	soft_close();
 
 	// de-allocate TT
 	delete[] transpositionTable;
@@ -676,7 +690,7 @@ void Bbot::search_fixed_depth(int depth) {
 		eval = board->sideToMove ? -value : value;
 
 	// set depth
-	searchDepth = std::max(depth, (int) tt_current()->depth);
+	searchDepth = (std::max)(depth, (int) tt_current()->depth);
 
 	// set duration
 	searchDuration = (double) search_clock() / CLOCKS_PER_SEC;

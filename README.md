@@ -3,7 +3,10 @@ Bbot2 v0.1
 ----------------
 
 See SETTINGS.ini for options.
+
 ----------------
+
+ABOUT
 
 Barca is a chess variant board game created by Andrew Caldwell. An adapted version of
 the rules are included below.
@@ -52,6 +55,18 @@ the rules are included below.
 	
 Original rules: http://playbarca.com/?page_id=40
 ----------------
+
+CONTROLS (Default configuration - see SETTINGS.ini)
+
+Click piece to view legal moves, then click any legal square to move the selected piece there.
+Alternatively, you may drag the piece any legal square.
+
+Press 'LEFT' to view previous positions in the game.
+Press 'RIGHT' to view next position.
+Press 'r' to restart.
+
+----------------
+
 
 Bbot2 was designed as a chess variant engine to play the game as optimally as
 possible. Many traditional chess programming techniques were borrowed, with exact

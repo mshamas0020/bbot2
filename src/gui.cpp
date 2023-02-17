@@ -20,13 +20,45 @@ GUI::GUI(Game* game_)
 
 ////
 
+// get settings from .ini
+void GUI::settings() {
+
+	// perspective
+	string s = string(ini.GetValue("GAME", "perspective"));
+
+	PERSPECTIVE = PERSPECTIVE_AUTO;
+	if (s == "white") PERSPECTIVE = PERSPECTIVE_FIXED_WHITE;
+	if (s == "black") PERSPECTIVE = PERSPECTIVE_FIXED_BLACK;
+
+	// layout
+	SCREEN_WIDTH =		std::stoi(string(ini.GetValue("LAYOUT", "screen-width")));
+	SCREEN_HEIGHT =		std::stoi(string(ini.GetValue("LAYOUT", "screen-height")));
+
+	MIN_GAME_SIZE =		std::stoi(string(ini.GetValue("LAYOUT", "min-game-size")));
+	INFO_BOX_HEIGHT =	std::stoi(string(ini.GetValue("LAYOUT", "info-box-height")));
+	MARGIN =			std::stoi(string(ini.GetValue("LAYOUT", "margin")));
+
+	FONT_SIZE =			std::stoi(string(ini.GetValue("LAYOUT", "font-size")));
+
+	// controls
+	PREV_POS_KEYCODE =	SDL_GetKeyFromName(ini.GetValue("CONTROLS", "prev-pos-key"));
+	NEXT_POS_KEYCODE =	SDL_GetKeyFromName(ini.GetValue("CONTROLS", "next-pos-key"));
+	RESET_KEYCODE =		SDL_GetKeyFromName(ini.GetValue("CONTROLS", "reset-key"));
+
+	if (PREV_POS_KEYCODE == SDLK_UNKNOWN || NEXT_POS_KEYCODE == SDLK_UNKNOWN || RESET_KEYCODE == SDLK_UNKNOWN)
+		throw Exception(INI_FILE + " - Invalid key name");
+}
+
 // initialize
 void GUI::init() {
+
+	if (!game->initialized)
+		game->init();
 
 	// initialize SDL
 	init_SDL();
 
-	window_resized(screenWidth, screenHeight); // sets layout values
+	window_resized(SCREEN_WIDTH, SCREEN_HEIGHT); // sets layout values
 
 	// load textures, fonts, cursors
 	load_resources();
@@ -41,11 +73,27 @@ void GUI::init() {
 	posIndex = 0;
 
 	// initial board orientation
-	flipBoard = PERSPECTIVE == FIXED_BLACK;
+	flipBoard = PERSPECTIVE == PERSPECTIVE_FIXED_BLACK;
 }
 
-// reset when passed a new game
-void GUI::open_game(Game* game_) {
+// reset
+void GUI::reset() {
+
+	// reset game
+	game->reset();
+
+	// reset text
+	init_text();
+
+	// copy display board
+	std::copy(board->pointerBoard, &board->pointerBoard[NUM_SQUARES], displayBoard);
+
+	// display move index
+	posIndex = 0;
+}
+
+// attach a new game and reset what is necessary
+void GUI::attach_game(Game* game_) {
 	game = game_;
 	board = game->board;
 	pieces = board->pieces;
@@ -127,7 +175,7 @@ void GUI::init_SDL() {
 	SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "1");
 
 	// create window
-	window = SDL_CreateWindow("BBOT 2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, screenWidth, screenHeight, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+	window = SDL_CreateWindow("BBOT 2", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH, SCREEN_HEIGHT, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 
 	// set renderer
 	renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_TARGETTEXTURE);
@@ -349,14 +397,19 @@ void GUI::on_mouse_up_event() {
 
 // key down event
 void GUI::on_key_down_event(SDL_Keycode keycode) {
-	switch (keycode) {
-		case SDLK_LEFT:
-			to_pos(std::max(posIndex - 1, 0));
-			break;
 
-		case SDLK_RIGHT:
-			to_pos(std::min(posIndex + 1, game->playedLine.length));
-			break;
+	// change viewed position
+	if (keycode == PREV_POS_KEYCODE)
+		to_pos((std::max) (posIndex - 1, 0));
+
+	if (keycode == NEXT_POS_KEYCODE)
+		to_pos((std::min) (posIndex + 1, game->playedLine.length));
+
+
+	// reset
+	if (keycode == RESET_KEYCODE) {
+		reset();
+		__LOG("\nRESET COMPLETE");
 	}
 }
 
@@ -366,25 +419,25 @@ void GUI::on_key_down_event(SDL_Keycode keycode) {
 // updates layout values
 void GUI::window_resized(int width, int height) {
 	// update screen width/height
-	screenWidth = width;
-	screenHeight = height;
+	SCREEN_WIDTH = width;
+	SCREEN_HEIGHT = height;
 
 	// if screen is too short, don't show info box
-	showInfo = MARGIN + MIN_GAME_SIZE + MARGIN + INFO_BOX_HEIGHT + MARGIN <= screenHeight;
+	showInfo = MARGIN + MIN_GAME_SIZE + MARGIN + INFO_BOX_HEIGHT + MARGIN <= SCREEN_HEIGHT;
 
 	// game size, with or without info box
 	if (showInfo) {
-		GAME_WIDTH = std::min(screenWidth, screenHeight - INFO_BOX_HEIGHT) - 2 * MARGIN;
+		GAME_WIDTH = (std::min)(SCREEN_WIDTH, SCREEN_HEIGHT - INFO_BOX_HEIGHT) - 2 * MARGIN;
 	} else {
-		GAME_WIDTH = std::min(screenWidth, screenHeight) - 2 * MARGIN;
+		GAME_WIDTH = (std::min)(SCREEN_WIDTH, SCREEN_HEIGHT) - 2 * MARGIN;
 	}
 
 	// game width/height can't go below minimum
-	GAME_WIDTH = std::max(GAME_WIDTH, MIN_GAME_SIZE);
+	GAME_WIDTH = (std::max)(GAME_WIDTH, MIN_GAME_SIZE);
 	GAME_HEIGHT = GAME_WIDTH;
 
 	// game x/y
-	GAME_X = std::max(screenWidth / 2 - GAME_WIDTH / 2, MARGIN);
+	GAME_X = (std::max)(SCREEN_WIDTH / 2 - GAME_WIDTH / 2, MARGIN);
 	GAME_Y = MARGIN;
 
 	// square width/height
@@ -419,7 +472,7 @@ void GUI::on_move_played() {
 	to_pos(game->playedLine.length);
 
 	// flip board if needed
-	if (PERSPECTIVE == AUTO && game->user_to_play())
+	if (PERSPECTIVE == PERSPECTIVE_AUTO && game->user_to_play())
 		flipBoard = board->sideToMove;
 
 	game->movePlayed = false;
@@ -470,12 +523,14 @@ void GUI::init_text() {
 	//	[1] - eval from last computer to play
 	//	[2] - PV from last computer to play
 	//	[3] - played line
+	//  [4] - nodes/sec
 
 	infoText.clear();
-	for (int i = 0; i < 4; i ++)
+	for (int i = 0; i < 5; i ++)
 		infoText.push_back(Text("", 0, 0, 0, TTF_WRAPPED_ALIGN_LEFT, COLOUR_TEXT, this));
 
 	infoText[3].colour = COLOUR_COORD;
+	infoText[4].align = TTF_WRAPPED_ALIGN_RIGHT;
 }
 
 // write contents of text
@@ -492,7 +547,8 @@ void GUI::update_text() {
 			case DRAW_MOVE_LIMIT: infoText[1].write("GAME OVER, REACHED MOVE LIMIT"); break;
 		}
 
-		infoText[2].write("");
+		infoText[2].write(format("Press '{}' to reset", string(SDL_GetKeyName(RESET_KEYCODE))));
+		infoText[4].write("");
 	} else {
 
 		// get info about last search from game
@@ -500,6 +556,7 @@ void GUI::update_text() {
 		infoText[1].write(format("EVAL: {}, DEPTH: {} ({:.2f}s)", game->searchEval, game->searchDepth, game->searchDuration));
 		infoText[2].write(game->searchPV);
 		infoText[3].write(game->playedLine.to_string(board->startPointerBoard));
+		infoText[4].write(format("{} nodes/sec", game->searchSpeed));
 	}
 }
 
@@ -680,7 +737,7 @@ void GUI::draw_info() {
 	for (int i = 0; i < infoText.size(); i ++) {
 		infoText[i].x = MARGIN;
 		infoText[i].y = y;
-		infoText[i].set_width(screenWidth - MARGIN * 2);
+		infoText[i].set_width(SCREEN_WIDTH - MARGIN * 2);
 		infoText[i].draw();
 		y += infoText[i].textHeight + FONT_SIZE / 2;
 	}

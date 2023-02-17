@@ -12,11 +12,19 @@ namespace Bbot2 {
 
 void play() {
 
+	try {
+
+
+
 	// initialize
 
 	// .ini
-	loadINI();
+	load_INI();
 	__LOG_VERBOSE(INI_FILE + " loaded");
+
+	// if side is computer
+	bool S_CP1 = std::string(ini.GetValue("GAME", "white-is")) == "computer";
+	bool S_CP2 = std::string(ini.GetValue("GAME", "black-is")) == "computer";
 
 	// bitboard
 	Bitboard::init();
@@ -28,22 +36,25 @@ void play() {
 
 	// board
 	Board board;
+	board.settings();
 	board.init();
 	__LOG_VERBOSE("Board initialized");
 
 	// game
 	Game game(&board);
+	game.settings();
+	game.init();
 
 	// add computers
 	Bbot comp[NUM_SIDES] = { Bbot(&game), Bbot(&game) };
 
-	if (S_CP1) {
+	if (S_CP1) { // white computer
 		comp[WHITE].init();
 		game.add_player(&comp[WHITE], WHITE);
 		__LOG_VERBOSE("CP1 initialized");
 	}
 
-	if (S_CP2) {
+	if (S_CP2) { // black computer
 		comp[BLACK].init();
 		game.add_player(&comp[BLACK], BLACK);
 		__LOG_VERBOSE("CP2 initialized");
@@ -51,27 +62,26 @@ void play() {
 
 	// GUI
 	GUI graphics(&game);
+	graphics.settings(); // from .ini
 	graphics.init();
 	__LOG_VERBOSE("GUI initialized");
 	__LOG_VERBOSE("\n");
 
 
+
 	// main loop
-	try {
-		while (!graphics.loop_end()) {
-			game.update();
-			graphics.update();
-			graphics.draw();
-		}
-	} catch (Exception e) {
-		e.print();
+	while (!graphics.loop_end()) {
+		game.update();
+		graphics.update();
+		graphics.draw();
 	}
+
+
 
 	// close
 
 	// GUI
 	graphics.close();
-
 
 	// computers
 	if (S_CP1) {
@@ -91,6 +101,11 @@ void play() {
 	// move-gen
 	Tables::close();
 	__LOG_VERBOSE("Move-gen tables deallocated");
+
+
+	} catch (Exception e) {
+		e.print();
+	}
 }
 
 } // end namespace Bbot2

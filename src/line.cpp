@@ -74,7 +74,7 @@ string Line::to_string(int startPly, Piece* pointerBoard[NUM_SQUARES]) {
 // startPly - used for move numbering. use INT_MAX for no move numbers
 string Line::to_string(int startPly, int maxLength, Piece* pointerBoard[NUM_SQUARES]) {
 
-	maxLength = std::min(maxLength, length);
+	maxLength = (std::min)(maxLength, length);
 	string s = "";
 
 	// copy real pointerBoard to temp

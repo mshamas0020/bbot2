@@ -15,20 +15,34 @@
 
 namespace Bbot2 {
 
+enum Perspective: int { PERSPECTIVE_FIXED_WHITE, PERSPECTIVE_FIXED_BLACK, PERSPECTIVE_AUTO };
+
 class GUI {
 
-	//// INITIAL SCREEN WIDTH/HEIGHT ////
-	int screenWidth = S_SCREEN_WIDTH; 
-	int screenHeight = S_SCREEN_HEIGHT;
+	//// SETTINGS ////
 
-	//// LAYOUT ////
-	const int MIN_GAME_SIZE = S_MIN_GAME_SIZE;
-	const int INFO_BOX_HEIGHT = S_INFO_BOX_HEIGHT;
-	const int MARGIN = S_MARGIN;
+	//// GAME //// *
+	Perspective PERSPECTIVE = PERSPECTIVE_AUTO;
+	
+	//// LAYOUT //// *
+	int SCREEN_WIDTH = 600;
+	int SCREEN_HEIGHT = 950;
 
-	const Perspective PERSPECTIVE = S_PERSPECTIVE;
+	int MIN_GAME_SIZE = 300;
+	int INFO_BOX_HEIGHT = 200;
+	int MARGIN = 50;
 
-	// overrided by SETTINGS.ini
+	int FONT_SIZE = 16;
+
+	//// CONTROLS //// *
+	SDL_Keycode PREV_POS_KEYCODE = SDLK_LEFT;
+	SDL_Keycode NEXT_POS_KEYCODE = SDLK_RIGHT;
+	SDL_Keycode RESET_KEYCODE = SDLK_r;
+
+	// *usually overrided by .ini in settings()
+
+	////
+
 
 	//// COLOURS ////
 	SDL_Color COLOUR_BG =			{ 0x20, 0x20, 0x20, 0xFF }; // background
@@ -65,7 +79,6 @@ class GUI {
 
 	//// FONT ////
 	const std::string FONT_FILE = "consola.ttf";
-	int FONT_SIZE = S_FONT_SIZE;
 
 	////
 
@@ -121,8 +134,10 @@ class GUI {
 public:
 	GUI(Game* game_);
 
+	void settings();
 	void init();
-	void open_game(Game* game_);
+	void reset();
+	void attach_game(Game* game_);
 
 	void update();
 

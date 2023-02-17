@@ -4,6 +4,8 @@
 
 #include "game.h"
 
+using std::string;
+
 namespace Bbot2 {
 
 // constructor
@@ -12,8 +14,18 @@ Game::Game(Board* board_)
 
 ////
 
+// get settings from .ini
+void Game::settings() {
+	searchMaxTime = std::stoi(string(ini.GetValue("COMPUTER_PLAYER", "time-limit")));
+	searchMaxDepth = std::stoi(string(ini.GetValue("COMPUTER_PLAYER", "depth-limit")));
+}
+
+// init
 void Game::init() {
-	initialized = true;
+	if (!board->initialized)
+		board->init();
+
+	
 	ply = 0;
 	outcome = OUTCOME_NONE;
 	playedLine.movesVector.clear();
@@ -21,16 +33,37 @@ void Game::init() {
 	history = nullptr;
 	movePlayed = false;
 
+	string searchEval = "0";
+	string searchPV = "";
+	int searchDepth = 0;
+	double searchDuration = 0;
+	int searchSpeed = 0;
+
 	add_history();
+
+	initialized = true;
 }
 
-// reset when passed a new board
-void Game::open_board(Board* board_) {
+// reset
+void Game::reset() {
+	for (Side side : SIDES)
+		if (players[side] != nullptr)
+			players[side]->soft_close();
+		
+	close();
+	board->reset();
+	init();
+}
+
+// attach new board and reset necessary values
+void Game::attach_board(Board* board_) {
 	board = board_;
 	outcome = OUTCOME_NONE;
 
 	for (Side side : SIDES) {
-		players[side]->close();
+		if (players[side] != nullptr)
+			players[side]->close();
+
 		players[side] = nullptr;
 	}
 }
@@ -63,6 +96,7 @@ void Game::update() {
 	searchPV = comp->search_PV();
 	searchDepth = comp->search_depth();
 	searchDuration = comp->search_duration();
+	searchSpeed = comp->search_speed();
 }
 
 ////

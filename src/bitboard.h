@@ -22,7 +22,6 @@
 
 #pragma once
 
-
 #include "common.h"
 #include "log.h"
 #include <intrin.h>

@@ -36,12 +36,18 @@ class Game {
 public:
 	////
 
-	//// COMPUTER SETTINGS ////
+	//// SETTINGS ////
 
-	int searchMaxTime = S_TIME_LIMIT; // milliseconds
-	int searchMaxDepth = S_DEPTH_LIMIT; // capped by MAX_LINE_LEN
+	// search limits
+	int searchMaxTime = 1000; // milliseconds
+	int searchMaxDepth = MAX_LINE_LEN; // capped by MAX_LINE_LEN
 
-	// overrided by SETTINGS.ini
+	// usually overrided by .ini in settings()
+
+
+	// draw rule
+	// if a position occurs x times, the game ends in a draw
+	const int REPETITIONS_TO_DRAW = 3;
 
 	////
 
@@ -60,6 +66,7 @@ public:
 	std::string searchPV;
 	int searchDepth;
 	double searchDuration;
+	int searchSpeed;
 
 	// true for one cycle if move was played
 	// triggers an update for GUI
@@ -70,9 +77,10 @@ public:
 
 	Game(Board* board_);
 
+	void settings();
 	void init();
-
-	void open_board(Board* board_);
+	void reset();
+	void attach_board(Board* board_);
 	void add_player(Bbot* comp, Side side);
 
 	void update();

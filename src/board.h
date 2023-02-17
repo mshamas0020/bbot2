@@ -18,7 +18,11 @@ namespace Bbot2 {
 
 class Board {
 public:
-	std::string DEFAULT_START_POS = // piece set up
+	// Starting position
+	// 'M/m' - mouse (rook), 'L/l' - lion (bishop), 'E/e' - elephant (queen), '.' - empty square
+	// Uppercase pieces are white.Lowercase is black.
+	// Lower left corner is a1.Upper right is j10.
+	std::string DEFAULT_START_POS =
 		". . . . e e . . . ."
 		". . . l m m l . . ."
 		". . . . . . . . . ."
@@ -29,6 +33,8 @@ public:
 		". . . . . . . . . ."
 		". . . L M M L . . ."
 		". . . . E E . . . .";
+
+	// usually overrided by .ini in settings()
 
 private:
 	std::string WATERING_HOLES_STR = // watering holes
@@ -66,15 +72,12 @@ public:
 	bboard occupancyBySide[NUM_SIDES]; // occupancy of white [0] and black [1]
 
 private:
-	const int TT_ALLOC = S_TT_ALLOC;
-
 	bboard threatMaps[NUM_HERDS]; // union of adjacent squares for each herd
 
 public:
-	Board();
-	Board(std::string s);
 	void from_string(std::string s);
 
+	void settings();
 	void init();
 	void reset();
 
@@ -97,8 +100,8 @@ public:
 
 private:
 	void add_piece(int herd, int k);
-	void set_up_WH();
-	void set_up_pieces();
+	void init_WH();
+	void init_pieces();
 
 	void schedule_sight_updates(Piece* p);
 	void update_piece_sight(Piece* p);

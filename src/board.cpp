@@ -10,16 +10,6 @@ namespace Bbot2 {
 
 // Board //
 
-// constructor, default
-Board::Board() {
-	from_string(DEFAULT_START_POS);
-}
-
-// construct with alternate position
-Board::Board(string s) {
-	from_string(s);
-}
-
 // convert string to pos
 // key:
 	// .  ...  j10
@@ -54,31 +44,32 @@ void Board::from_string(string s) {
 			break;
 	}
 
-	// if not initalialized, full init is still expected later
-	// if already initialized, this is all that's required
-	if (initialized) {
-		set_up_pieces();
-		update_move_sets();
-	}
+	// full initialization expected afterwards
 }
 
 ////
 
-// set up board elements
-// gets moves, threats, etc.
+// get settings from .ini
+void Board::settings() {
+	DEFAULT_START_POS = string(ini.GetValue("GAME", "start-pos"));
+}
+
+// init
 void Board::init() {
 	if (!Tables::initialized)
 		Tables::init();
 
-	sideToMove = 0;
+	// set up starting position, if not already set up
+	if (pieces[WHITE].empty() || pieces[BLACK].empty())
+		from_string(DEFAULT_START_POS);
 
 	// set up watering holes
-	set_up_WH();
+	init_WH();
 
-	// set up pieces
-	set_up_pieces();
+	// set up pieces, their relationships, and threats 
+	init_pieces();
 
-	// set up zobrist key/values
+	// init zobrist key/values
 	init_zobrist_values();
 
 	// update move sets
@@ -86,8 +77,11 @@ void Board::init() {
 
 	// get startPointerBoard from pointerBoard
 	std::copy(pointerBoard, &pointerBoard[NUM_SQUARES], startPointerBoard);
+
+	sideToMove = 0; // white
 }
 
+// reset
 void Board::reset() {
 	close();
 	from_string(DEFAULT_START_POS);
@@ -283,7 +277,7 @@ void Board::add_piece(int herd, int k) {
 }
 
 // generate necessary bboards/values for watering holes
-void Board::set_up_WH() {
+void Board::init_WH() {
 	// get watering holes from string
 	wateringHoles = Bitboard::from_string(WATERING_HOLES_STR);
 
@@ -294,7 +288,7 @@ void Board::set_up_WH() {
 }
 
 // initialize pieces, pointerBoard, and threatMaps
-void Board::set_up_pieces() {
+void Board::init_pieces() {
 	// clear pointer board
 	for (int i = 0; i < NUM_SQUARES; i ++)
 		pointerBoard[i] = nullptr;
